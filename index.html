@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ИДИ НАХУЙ — официальный сайт</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0a0000;
+  --accent: #ff0000;
+  --accent-rgb: 255,0,0;
+  --accent-2: #ff4400;
+  --text: #ffffff;
+  --dim: #aa6666;
+  --glow-1: 0 0 20px var(--accent);
+  --glow-2: 0 0 60px var(--accent);
+  --glow-3: 0 0 120px var(--accent);
+}
+
+[data-theme="blue"]   { --accent: #0088ff; --accent-rgb: 0,136,255;   --accent-2: #00ccff; --bg: #000a0f; --dim: #668899; }
+[data-theme="green"]  { --accent: #00ff44; --accent-rgb: 0,255,68;    --accent-2: #88ff00; --bg: #000a00; --dim: #66aa66; }
+[data-theme="purple"] { --accent: #cc00ff; --accent-rgb: 204,0,255;   --accent-2: #ff00aa; --bg: #0a000a; --dim: #9966aa; }
+[data-theme="gold"]   { --accent: #ffcc00; --accent-rgb: 255,204,0;   --accent-2: #ff8800; --bg: #0a0800; --dim: #aa9966; }
+[data-theme="white"]  { --accent: #ffffff; --accent-rgb: 255,255,255; --accent-2: #cccccc; --bg: #000000; --dim: #888888; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  overflow-x: hidden;
+  transition: background 0.4s;
+}
+
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+.cursor-glow {
+  position: fixed;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  filter: blur(40px);
+}
+
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.navbar .logo {
+  font-weight: 900; font-size: 16px; letter-spacing: 2px;
+  color: var(--accent); text-shadow: 0 0 10px var(--accent);
+  cursor: pointer; text-transform: uppercase;
+}
+
+.navbar .spacer { flex: 1; }
+
+.navbar .nav-btn {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: inherit; font-size: 12px; font-weight: bold;
+  letter-spacing: 1px; cursor: pointer; text-transform: uppercase;
+  transition: all 0.2s; border-radius: 4px;
+}
+
+.navbar .nav-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow-1); }
+.navbar .nav-btn:active { transform: scale(0.95); }
+
+.hero {
+  position: relative; z-index: 2;
+  min-height: calc(100vh - 60px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 20px; text-align: center; gap: 30px;
+}
+
+/* Wrapper отвечает за пульсацию (scale) и клик (transform) — не конфликтует с эффектами текста */
+.big-text-wrapper {
+  display: block;
+  max-width: 100%;
+  animation: pulse 0.8s ease-in-out infinite alternate;
+  text-shadow: var(--glow-1), var(--glow-2), var(--glow-3);
+  transition: transform 0.1s;
+  cursor: pointer;
+  outline: none;
+}
+
+.big-text-wrapper.no-pulse { animation: none; }
+.big-text-wrapper:active { transform: scale(0.98); }
+
+.big-text {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: clamp(60px, 18vw, 280px);
+  font-weight: 900; line-height: 0.88; letter-spacing: -3px;
+  text-transform: uppercase; color: var(--accent);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
+@keyframes pulse {
+  from { scale: 1; }
+  to   { scale: 1.04; }
+}
+
+/* Эффекты текста — отдельно от пульсации */
+.glitch-on .big-text { animation: glitch 0.3s infinite; }
+
+@keyframes glitch {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-3px, 2px); text-shadow: 3px 0 #00ffff, -3px 0 #ff00ff, var(--glow-1); }
+  40%  { transform: translate(3px, -2px); text-shadow: -3px 0 #00ffff, 3px 0 #ff00ff, var(--glow-1); }
+  60%  { transform: translate(-2px, -1px); }
+  80%  { transform: translate(2px, 1px); text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff, var(--glow-1); }
+  100% { transform: translate(0); }
+}
+
+.rainbow-on .big-text { animation: rainbow 2s linear infinite; }
+
+@keyframes rainbow {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.shake-on .big-text { animation: shake 0.15s infinite; }
+
+@keyframes shake {
+  0%   { transform: translate(0,0) rotate(0); }
+  25%  { transform: translate(-2px, 1px) rotate(-1deg); }
+  50%  { transform: translate(2px, -1px) rotate(1deg); }
+  75%  { transform: translate(-1px, 2px) rotate(0); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+/* Если включено несколько эффектов — приоритет по порядку, но каждый независимо включается/выключается */
+.glitch-on .big-text { animation-name: glitch; }
+
+.hero-actions {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px;
+}
+
+.big-btn {
+  padding: 14px 28px; font-family: inherit; font-size: 14px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
+  background: transparent; border: 2px solid var(--accent);
+  cursor: pointer; transition: all 0.2s; border-radius: 6px;
+  position: relative; overflow: hidden;
+}
+
+.big-btn::before {
+  content: ''; position: absolute; inset: 0; background: var(--accent);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.3s; z-index: -1;
+}
+
+.big-btn:hover { color: #000; box-shadow: var(--glow-1); }
+.big-btn:hover::before { transform: scaleX(1); }
+.big-btn:active { transform: scale(0.96); }
+
+.big-btn.primary {
+  background: var(--accent); color: #000; box-shadow: var(--glow-1);
+}
+
+.big-btn.primary:hover { box-shadow: var(--glow-2); transform: scale(1.03); }
+
+.click-counter {
+  font-size: 12px; color: var(--dim); letter-spacing: 2px;
+  text-transform: uppercase; margin-top: 10px;
+}
+
+.click-counter b {
+  color: var(--accent); font-size: 20px; text-shadow: var(--glow-1);
+}
+
+.scroll-hint {
+  position: absolute; bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  color: var(--dim); font-size: 12px; letter-spacing: 3px;
+  text-transform: uppercase; animation: bounceDown 2s infinite;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+}
+
+.scroll-hint::after {
+  content: '▼'; font-size: 20px; color: var(--accent); text-shadow: var(--glow-1);
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.6; }
+  50%      { transform: translate(-50%, 10px); opacity: 1; }
+}
+
+.section {
+  position: relative; z-index: 2; padding: 80px 20px;
+  max-width: 1100px; margin: 0 auto;
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+
+.section.visible { opacity: 1; transform: translateY(0); }
+
+.section h2 {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: clamp(32px, 6vw, 60px); letter-spacing: -1px;
+  text-transform: uppercase; color: var(--accent);
+  text-shadow: var(--glow-1), var(--glow-2);
+  margin-bottom: 20px; text-align: center;
+}
+
+.section p {
+  font-size: 16px; line-height: 1.7; color: #cccccc;
+  text-align: center; max-width: 700px; margin: 0 auto 40px;
+}
+
+.section p em { color: var(--accent); font-style: normal; font-weight: bold; }
+
+.cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px; margin-top: 30px;
+}
+
+.card {
+  padding: 24px; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0); transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px); border-color: var(--accent);
+  box-shadow: 0 20px 40px rgba(var(--accent-rgb), 0.15);
+}
+
+.card:hover::before { transform: scaleX(1); }
+
+.card .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+
+.card h3 {
+  font-size: 18px; color: var(--accent); margin-bottom: 8px;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+.card p {
+  font-size: 14px; color: #aaaaaa; line-height: 1.6; text-align: left; margin: 0;
+}
+
+.reviews {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-top: 30px;
+}
+
+.review {
+  padding: 20px; background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.review:hover { background: rgba(255,255,255,0.06); transform: translateX(6px); }
+
+.review .stars { color: var(--accent); margin-bottom: 10px; font-size: 14px; letter-spacing: 3px; }
+
+.review .text {
+  font-size: 14px; line-height: 1.6; color: #dddddd; font-style: italic; margin-bottom: 12px;
+}
+
+.review .author {
+  font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px;
+}
+
+.faq { max-width: 700px; margin: 30px auto 0; }
+.faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+.faq-q {
+  padding: 20px 0; font-size: 16px; font-weight: bold; color: #ffffff;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: color 0.2s; user-select: none;
+}
+
+.faq-q:hover { color: var(--accent); }
+
+.faq-q::after {
+  content: '+'; font-size: 24px; color: var(--accent); transition: transform 0.3s;
+}
+
+.faq-item.open .faq-q::after { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s, padding 0.3s;
+  color: #aaaaaa; font-size: 14px; line-height: 1.6;
+}
+
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 20px; }
+
+.footer {
+  position: relative; z-index: 2; padding: 40px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.1); color: var(--dim);
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.footer .big {
+  font-family: 'Impact', sans-serif; font-size: 32px; color: var(--accent);
+  text-shadow: var(--glow-1); margin-bottom: 16px; letter-spacing: 2px;
+}
+
+.modal {
+  position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(10px);
+}
+
+.modal.show { display: flex; animation: fadeIn 0.2s; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  width: 100%; max-width: 520px; max-height: 85vh;
+  background: #0f0f0f; border: 1px solid var(--accent);
+  border-radius: 16px; box-shadow: 0 0 60px rgba(var(--accent-rgb), 0.4);
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: popIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.modal-head {
+  padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.modal-head h2 {
+  font-size: 18px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent); text-shadow: var(--glow-1);
+}
+
+.close-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: transparent; border: 1px solid var(--accent); color: var(--accent);
+  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover { background: var(--accent); color: #000; transform: rotate(90deg); }
+
+.modal-body { padding: 20px 22px; overflow-y: auto; }
+
+.set-group { margin-bottom: 24px; }
+
+.set-group h4 {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 12px; padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(255,255,255,0.15);
+}
+
+.set-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; gap: 12px; font-size: 14px;
+}
+
+.set-row .label { color: #dddddd; flex: 1; }
+
+.switch {
+  width: 46px; height: 26px; border-radius: 13px;
+  background: rgba(255,255,255,0.15); position: relative;
+  cursor: pointer; transition: background 0.3s; flex-shrink: 0;
+}
+
+.switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.5);
+}
+
+.switch.on { background: var(--accent); box-shadow: 0 0 20px var(--accent); }
+.switch.on::after { transform: translateX(20px); }
+
+.theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+
+.theme-btn {
+  aspect-ratio: 1; border-radius: 50%; border: 2px solid transparent;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+
+.theme-btn:hover { transform: scale(1.15); }
+
+.theme-btn.active {
+  border-color: #ffffff; box-shadow: 0 0 20px currentColor; transform: scale(1.1);
+}
+
+.theme-btn[data-t="red"]    { background: #ff0000; color: #ff0000; }
+.theme-btn[data-t="blue"]   { background: #0088ff; color: #0088ff; }
+.theme-btn[data-t="green"]  { background: #00ff44; color: #00ff44; }
+.theme-btn[data-t="purple"] { background: #cc00ff; color: #cc00ff; }
+.theme-btn[data-t="gold"]   { background: #ffcc00; color: #ffcc00; }
+.theme-btn[data-t="white"]  { background: #ffffff; color: #ffffff; }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 140px; height: 6px;
+  border-radius: 3px; background: rgba(255,255,255,0.15); outline: none; cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+  box-shadow: 0 0 10px var(--accent); transition: transform 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--accent);
+  cursor: pointer; border: none; box-shadow: 0 0 10px var(--accent);
+}
+
+.custom-input {
+  width: 100%; padding: 10px 14px;
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; color: var(--accent); font-family: inherit;
+  font-size: 16px; font-weight: bold; outline: none;
+  transition: all 0.2s; text-align: center; letter-spacing: 2px;
+}
+
+.custom-input:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3); }
+
+.modal-btn {
+  width: 100%; padding: 12px;
+  background: transparent; border: 1px solid var(--accent); color: var(--accent);
+  font-family: inherit; font-size: 14px; font-weight: bold;
+  letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+  border-radius: 8px; transition: all 0.2s; margin-top: 10px;
+}
+
+.modal-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow-1); }
+
+.toast {
+  position: fixed; bottom: 30px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 14px 28px; background: rgba(20,0,0,0.95);
+  border: 1px solid var(--accent); border-radius: 30px;
+  color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 1px;
+  z-index: 2000; transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.5); pointer-events: none;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 600px) {
+  .navbar { padding: 10px 14px; gap: 8px; }
+  .navbar .logo { font-size: 13px; letter-spacing: 1px; }
+  .navbar .nav-btn { padding: 6px 10px; font-size: 10px; }
+  .hero { padding: 30px 16px; }
+  .big-btn { padding: 12px 20px; font-size: 12px; }
+  .section { padding: 50px 16px; }
+  .section h2 { font-size: 28px; }
+  .set-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  input[type="range"] { width: 100%; }
+  .theme-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body data-theme="red">
+
+<canvas id="particles"></canvas>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav class="navbar">
+  <span class="logo" onclick="window.scrollTo(0,0)">ИДИ НАХУЙ™</span>
+  <span class="spacer"></span>
+  <button class="nav-btn" onclick="openSettings()">⚙ Настройки</button>
+  <button class="nav-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+</nav>
+
+<section class="hero">
+  <div class="big-text-wrapper" id="bigWrapper" tabindex="0" role="button" aria-label="Скажи ещё раз">
+    <div class="big-text" id="bigText">ИДИ<br>НАХУЙ</div>
+  </div>
+
+  <div class="hero-actions">
+    <button class="big-btn primary" onclick="onTextClick()">Скажи ещё раз</button>
+    <button class="big-btn" onclick="playSound()">🔊 Произнести</button>
+    <button class="big-btn" onclick="randomEffect()">✨ Случайный эффект</button>
+    <button class="big-btn" onclick="openSettings()">⚙ Настроить</button>
+  </div>
+
+  <div class="click-counter">Нажатий: <b id="clickCount">0</b></div>
+  <div class="scroll-hint" onclick="scrollToSection()">Листай вниз</div>
+</section>
+
+<section class="section" id="about">
+  <h2>Что это такое?</h2>
+  <p>Это <em>официальный сайт</em> фразы, которую ты заслужил. Нажми на большую надпись — и отправь послание во вселенную. Выбери цвет, эффект и громкость — сайт подстроится под тебя.</p>
+
+  <div class="cards">
+    <div class="card"><span class="icon">🎯</span><h3>Точная цель</h3><p>Направлено лично тебе. Прочитай, осознай, прими.</p></div>
+    <div class="card"><span class="icon">⚡</span><h3>Мощный эффект</h3><p>Пульсация, свечение, глитч, радуга, тряска — выбери стиль.</p></div>
+    <div class="card"><span class="icon">🎨</span><h3>6 тем</h3><p>Красный, синий, зелёный, фиолетовый, золотой, белый.</p></div>
+    <div class="card"><span class="icon">🔊</span><h3>Голос</h3><p>Нажми «Произнести» — браузер озвучит фразу вслух.</p></div>
+    <div class="card"><span class="icon">📱</span><h3>Везде</h3><p>Телефон, планшет, компьютер. Адаптивный интерфейс.</p></div>
+    <div class="card"><span class="icon">🚀</span><h3>Оффлайн</h3><p>Один HTML-файл. Работает без интернета.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Отзывы пользователей</h2>
+  <p>Что говорят те, кому уже отправили послание</p>
+
+  <div class="reviews">
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Прочитал. Задумался. Согласен. Рекомендую.»</div><div class="author">— Аноним, Москва</div></div>
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Лучший сайт. Открыл — и сразу всё понял.»</div><div class="author">— Пользователь №4738</div></div>
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Никогда не думал, что одна фраза может быть оформлена так красиво.»</div><div class="author">— Дизайнер, СПб</div></div>
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Отправил начальнику. Теперь ищу работу. Спасибо сайту!»</div><div class="author">— Бывший сотрудник</div></div>
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Показывает точно и по делу. Ничего лишнего.»</div><div class="author">— Минималист</div></div>
+    <div class="review"><div class="stars">★★★★★</div><div class="text">«Сайт дня. Показываю всем друзьям.»</div><div class="author">— Ценитель прекрасного</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Часто задаваемые вопросы</h2>
+
+  <div class="faq">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Это точно мне?</div><div class="faq-a">Да. Если ты открыл этот сайт — значит, да. Персональное послание.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Можно ли изменить текст?</div><div class="faq-a">Да, в настройках есть поле «Свой текст». Введи что хочешь.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">А если мне не понравилось?</div><div class="faq-a">Это твои проблемы. Сайт своё дело сделал.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Есть мобильная версия?</div><div class="faq-a">Сайт автоматически адаптируется под телефон.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">А зачем это вообще?</div><div class="faq-a">Затем, что некоторые вещи нужно говорить прямо. И иногда — громко.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Можно использовать в личных целях?</div><div class="faq-a">Да, используй как хочешь. Никаких авторских прав.</div></div>
+  </div>
+</section>
+
+<section class="section" style="text-align: center;">
+  <h2>Забыл сказать?</h2>
+  <p>Не стесняйся, повтори.</p>
+  <button class="big-btn primary" style="margin: 20px auto; display: block;" onclick="window.scrollTo(0,0); setTimeout(onTextClick, 300);">Повторить ещё раз</button>
+</section>
+
+<footer class="footer">
+  <div class="big">ИДИ НАХУЙ</div>
+  <div>© 2026 Официальный сайт послания</div>
+  <div style="margin-top: 10px; opacity: 0.5;">Сделано с ❤️ и ненавистью</div>
+</footer>
+
+<div class="modal" id="settingsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>⚙ Настройки</h2>
+      <button class="close-btn" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="set-group">
+        <h4>Тема оформления</h4>
+        <div class="theme-grid">
+          <div class="theme-btn active" data-t="red" onclick="setTheme('red', this)" title="Красный"></div>
+          <div class="theme-btn" data-t="blue" onclick="setTheme('blue', this)" title="Синий"></div>
+          <div class="theme-btn" data-t="green" onclick="setTheme('green', this)" title="Зелёный"></div>
+          <div class="theme-btn" data-t="purple" onclick="setTheme('purple', this)" title="Фиолетовый"></div>
+          <div class="theme-btn" data-t="gold" onclick="setTheme('gold', this)" title="Золотой"></div>
+          <div class="theme-btn" data-t="white" onclick="setTheme('white', this)" title="Белый"></div>
+        </div>
+      </div>
+
+      <div class="set-group">
+        <h4>Свой текст</h4>
+        <input type="text" class="custom-input" id="customText" placeholder="ИДИ НАХУЙ" maxlength="20">
+        <div style="font-size: 11px; color: var(--dim); margin-top: 6px; text-align: center;">Макс 20 символов. <b>/</b> для переноса.</div>
+      </div>
+
+      <div class="set-group">
+        <h4>Эффекты</h4>
+        <div class="set-row"><div class="label">Пульсация</div><div class="switch on" id="swPulse" onclick="toggleSetting('pulse')"></div></div>
+        <div class="set-row"><div class="label">Глитч</div><div class="switch" id="swGlitch" onclick="toggleSetting('glitch')"></div></div>
+        <div class="set-row"><div class="label">Радуга</div><div class="switch" id="swRainbow" onclick="toggleSetting('rainbow')"></div></div>
+        <div class="set-row"><div class="label">Тряска</div><div class="switch" id="swShake" onclick="toggleSetting('shake')"></div></div>
+        <div class="set-row"><div class="label">Частицы на фоне</div><div class="switch on" id="swParticles" onclick="toggleSetting('particles')"></div></div>
+        <div class="set-row"><div class="label">Свечение курсора</div><div class="switch on" id="swCursor" onclick="toggleSetting('cursor')"></div></div>
+      </div>
+
+      <div class="set-group">
+        <h4>Размер текста</h4>
+        <div class="set-row"><div class="label">Масштаб</div><input type="range" id="textSize" min="50" max="150" value="100" oninput="changeTextSize(this.value)"></div>
+      </div>
+
+      <div class="set-group">
+        <h4>Звук</h4>
+        <div class="set-row"><div class="label">Включён</div><div class="switch on" id="swSound" onclick="toggleSetting('sound')"></div></div>
+        <div class="set-row"><div class="label">Громкость</div><input type="range" id="volume" min="0" max="100" value="50" oninput="changeVolume(this.value)"></div>
+      </div>
+
+      <button class="modal-btn" onclick="resetAll()">Сбросить всё</button>
+      <button class="modal-btn" onclick="closeSettings()">Готово</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+var STORAGE_KEY = 'idih_site_v1';
+
+var state = {
+  clicks: 0,
+  settings: {
+    theme: 'red',
+    text: '',
+    pulse: true,
+    glitch: false,
+    rainbow: false,
+    shake: false,
+    particles: true,
+    cursor: true,
+    sound: true,
+    volume: 50,
+    textSize: 100
+  }
+};
+
+var $ = function(id) { return document.getElementById(id); };
+var body = document.body;
+var bigText = $('bigText');
+var bigWrapper = $('bigWrapper');
+
+// ========== PERSISTENCE ==========
+function saveSettings() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      clicks: state.clicks,
+      settings: state.settings
+    }));
+  } catch (e) {}
+}
+
+function loadSettings() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var parsed = JSON.parse(raw);
+    if (parsed && parsed.settings) {
+      Object.keys(state.settings).forEach(function(k) {
+        if (parsed.settings[k] !== undefined) state.settings[k] = parsed.settings[k];
+      });
+    }
+    if (typeof parsed.clicks === 'number') state.clicks = parsed.clicks;
+  } catch (e) {}
+}
+
+// ========== AUDIO ==========
+var audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function(){});
+}
+
+function playBeep(freq, dur, type, vol) {
+  if (!state.settings.sound || !audioCtx) return;
+  try {
+    var t = audioCtx.currentTime;
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type || 'square';
+    osc.frequency.setValueAtTime(freq, t);
+    var v = (vol || 0.15) * (state.settings.volume / 100);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(v, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+
+function getCurrentText() {
+  if (!bigText) return 'Иди нахуй';
+  var html = bigText.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '');
+  return html.trim() || 'Иди нахуй';
+}
+
+function playSound() {
+  initAudio();
+  var phrase = getCurrentText();
+  if (!('speechSynthesis' in window)) {
+    playBeep(200, 0.2, 'sawtooth', 0.3);
+    setTimeout(function() { playBeep(150, 0.3, 'sawtooth', 0.3); }, 200);
+    toast('Синтез речи не поддерживается');
+    return;
+  }
+  try {
+    var u = new SpeechSynthesisUtterance(phrase);
+    u.lang = 'ru-RU';
+    u.rate = 0.9;
+    u.pitch = 0.7;
+    u.volume = state.settings.volume / 100;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+    toast('🔊 Озвучено');
+  } catch (e) {
+    toast('Ошибка воспроизведения');
+  }
+}
+
+// ========== TEXT CLICK ==========
+function onTextClick() {
+  initAudio();
+  state.clicks++;
+  $('clickCount').textContent = state.clicks;
+  saveSettings();
+
+  // Клик-скейл на wrapper (не конфликтует с пульсацией — там scale, тут transform)
+  bigWrapper.style.transform = 'scale(1.15)';
+  setTimeout(function() { bigWrapper.style.transform = ''; }, 100);
+
+  playBeep(180, 0.15, 'sawtooth', 0.25);
+  setTimeout(function() { playBeep(120, 0.2, 'sawtooth', 0.25); }, 80);
+
+  var accent = getAccent();
+  var flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;background:' + accent + ';opacity:0.3;pointer-events:none;z-index:999;transition:opacity 0.4s;';
+  document.body.appendChild(flash);
+  setTimeout(function() { flash.style.opacity = '0'; }, 30);
+  setTimeout(function() { flash.remove(); }, 500);
+
+  spawnBurst(window.innerWidth / 2, window.innerHeight / 2);
+
+  if (state.clicks === 5) toast('Уже 5 раз! Уважение.');
+  if (state.clicks === 10) toast('10 нажатий. Ты упорный.');
+  if (state.clicks === 25) toast('25! Ты точно всё понял?');
+  if (state.clicks === 50) toast('50 нажатий. Может хватит?');
+  if (state.clicks === 100) toast('100! Ты рекордсмен.');
+}
+
+// ========== RANDOM EFFECT ==========
+function randomEffect() {
+  var effects = ['glitch', 'rainbow', 'shake'];
+  var e = effects[Math.floor(Math.random() * effects.length)];
+
+  ['glitch', 'rainbow', 'shake'].forEach(function(x) {
+    state.settings[x] = false;
+    body.classList.remove(x + '-on');
+    var sw = $('sw' + x.charAt(0).toUpperCase() + x.slice(1));
+    if (sw) sw.classList.remove('on');
+  });
+
+  state.settings[e] = true;
+  body.classList.add(e + '-on');
+  var sw = $('sw' + e.charAt(0).toUpperCase() + e.slice(1));
+  if (sw) sw.classList.add('on');
+
+  saveSettings();
+  playBeep(880, 0.1, 'sine', 0.15);
+  setTimeout(function() { playBeep(1100, 0.15, 'sine', 0.15); }, 100);
+  toast('✨ Эффект: ' + e.toUpperCase());
+}
+
+// ========== FULLSCREEN ==========
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function(){});
+    }
+    toast('⛶ Полный экран');
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen().catch(function(){});
+    }
+  }
+}
+
+// ========== SETTINGS ==========
+function openSettings() {
+  $('settingsModal').classList.add('show');
+  initAudio();
+  playBeep(700, 0.08, 'sine', 0.1);
+}
+
+function closeSettings() {
+  $('settingsModal').classList.remove('show');
+  playBeep(500, 0.08, 'sine', 0.1);
+}
+
+function setTheme(t, el) {
+  state.settings.theme = t;
+  body.setAttribute('data-theme', t);
+  document.querySelectorAll('.theme-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.t === t);
+  });
+  saveSettings();
+  playBeep(880, 0.1, 'sine', 0.12);
+  toast('Тема: ' + t);
+}
+
+function toggleSetting(key) {
+  state.settings[key] = !state.settings[key];
+  applySetting(key);
+  saveSettings();
+  playBeep(1000, 0.06, 'sine', 0.08);
+}
+
+function applySetting(key) {
+  var val = state.settings[key];
+  var sw = $('sw' + key.charAt(0).toUpperCase() + key.slice(1));
+
+  if (key === 'glitch')  body.classList.toggle('glitch-on',  val);
+  if (key === 'rainbow') body.classList.toggle('rainbow-on', val);
+  if (key === 'shake')   body.classList.toggle('shake-on',   val);
+
+  if (key === 'pulse' && bigWrapper) {
+    bigWrapper.classList.toggle('no-pulse', !val);
+  }
+  if (key === 'particles') {
+    var pc = $('particles');
+    if (pc) pc.style.display = val ? '' : 'none';
+  }
+  if (key === 'cursor') {
+    var cg = $('cursorGlow');
+    if (cg) cg.style.display = val ? '' : 'none';
+  }
+
+  if (sw) sw.classList.toggle('on', val);
+}
+
+function changeTextSize(v) {
+  state.settings.textSize = parseInt(v, 10);
+  if (bigText) bigText.style.fontSize = 'calc(clamp(60px, 18vw, 280px) * ' + (v / 100) + ')';
+  saveSettings();
+}
+
+function changeVolume(v) {
+  state.settings.volume = parseInt(v, 10);
+  saveSettings();
+}
+
+function resetAll() {
+  state.clicks = 0;
+  $('clickCount').textContent = '0';
+  state.settings = {
+    theme: 'red', text: '', pulse: true, glitch: false, rainbow: false, shake: false,
+    particles: true, cursor: true, sound: true, volume: 50, textSize: 100
+  };
+  body.setAttribute('data-theme', 'red');
+  body.classList.remove('glitch-on', 'rainbow-on', 'shake-on');
+  if (bigWrapper) bigWrapper.classList.remove('no-pulse');
+  bigText.style.fontSize = '';
+  applyCustomText('');
+  document.querySelectorAll('.theme-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.t === 'red');
+  });
+  ['Pulse', 'Particles', 'Cursor', 'Sound'].forEach(function(k) {
+    var sw = $('sw' + k); if (sw) sw.classList.add('on');
+  });
+  ['Glitch', 'Rainbow', 'Shake'].forEach(function(k) {
+    var sw = $('sw' + k); if (sw) sw.classList.remove('on');
+  });
+  $('textSize').value = 100;
+  $('volume').value = 50;
+  $('customText').value = '';
+  saveSettings();
+  toast('Сброшено');
+}
+
+// ========== CUSTOM TEXT ==========
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(m) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+  });
+}
+
+function applyCustomText(raw) {
+  raw = (raw || '').trim();
+  if (!raw) {
+    bigText.innerHTML = 'ИДИ<br>НАХУЙ';
+    state.settings.text = '';
+  } else {
+    var parts = raw.split('/').map(function(s) { return escapeHtml(s.trim()); });
+    bigText.innerHTML = parts.join('<br>');
+    state.settings.text = raw;
+  }
+}
+
+// ========== FAQ ==========
+function toggleFaq(el) {
+  var item = el.parentElement;
+  item.classList.toggle('open');
+  playBeep(600, 0.06, 'sine', 0.08);
+}
+
+// ========== SCROLL ==========
+function scrollToSection() {
+  var sec = $('about');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+}
+
+function checkVisible() {
+  document.querySelectorAll('.section').forEach(function(sec) {
+    var rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) {
+      sec.classList.add('visible');
+    }
+  });
+}
+window.addEventListener('scroll', checkVisible, { passive: true });
+
+// ========== PARTICLES ==========
+var canvas = $('particles');
+var ctx = canvas ? canvas.getContext('2d') : null;
+var particles = [];
+
+function resizeCanvas() {
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function initParticles() {
+  particles = [];
+  var count = Math.min(60, Math.floor(window.innerWidth / 25));
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5,
+      alpha: Math.random() * 0.5 + 0.1
+    });
+  }
+}
+initParticles();
+
+function getAccent() {
+  try {
+    var v = getComputedStyle(body).getPropertyValue('--accent').trim();
+    return v || '#ff0000';
+  } catch (e) { return '#ff0000'; }
+}
+
+function getAccentRgb() {
+  try {
+    var v = getComputedStyle(body).getPropertyValue('--accent-rgb').trim();
+    if (v) return v.split(',').map(function(n){ return parseInt(n, 10); });
+  } catch (e) {}
+  return [255, 0, 0];
+}
+
+function drawParticles() {
+  if (!ctx || !canvas) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var accent = getAccentRgb();
+  for (var i = 0; i < particles.length; i++) {
+    var p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+    var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+    grad.addColorStop(0, 'rgba(' + accent[0] + ',' + accent[1] + ',' + accent[2] + ',' + (p.alpha * 0.8) + ')');
+    grad.addColorStop(1, 'rgba(' + accent[0] + ',' + accent[1] + ',' + accent[2] + ',0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,' + p.alpha + ')';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  for (var a = 0; a < particles.length; a++) {
+    for (var b = a + 1; b < particles.length; b++) {
+      var dx = particles[a].x - particles[b].x;
+      var dy = particles[a].y - particles[b].y;
+      var d2 = dx * dx + dy * dy;
+      if (d2 < 15000) {
+        var alpha2 = (1 - d2 / 15000) * 0.15;
+        ctx.strokeStyle = 'rgba(' + accent[0] + ',' + accent[1] + ',' + accent[2] + ',' + alpha2 + ')';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[a].x, particles[a].y);
+        ctx.lineTo(particles[b].x, particles[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+requestAnimationFrame(drawParticles);
+
+// ========== BURST ==========
+var bursts = [];
+
+function spawnBurst(x, y) {
+  var rgb = getAccentRgb();
+  for (var i = 0; i < 20; i++) {
+    var angle = (Math.PI * 2 / 20) * i;
+    var speed = 3 + Math.random() * 3;
+    bursts.push({
+      x: x, y: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      color: rgb,
+      size: Math.random() * 3 + 2
+    });
+  }
+}
+
+function drawBursts() {
+  if (!ctx || !canvas) return;
+  for (var i = bursts.length - 1; i >= 0; i--) {
+    var b = bursts[i];
+    b.x += b.vx;
+    b.y += b.vy;
+    b.vx *= 0.96;
+    b.vy *= 0.96;
+    b.life -= 0.02;
+    if (b.life <= 0) { bursts.splice(i, 1); continue; }
+    ctx.fillStyle = 'rgba(' + b.color[0] + ',' + b.color[1] + ',' + b.color[2] + ',' + b.life + ')';
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.size * b.life, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  requestAnimationFrame(drawBursts);
+}
+requestAnimationFrame(drawBursts);
+
+// ========== CURSOR GLOW ==========
+var cursorGlow = $('cursorGlow');
+document.addEventListener('mousemove', function(e) {
+  if (cursorGlow) {
+    cursorGlow.style.left = e.clientX + 'px';
+    cursorGlow.style.top = e.clientY + 'px';
+  }
+});
+
+// ========== TOAST ==========
+var toastTimer = null;
+function toast(msg) {
+  var t = $('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2200);
+}
+
+// ========== APPLY LOADED ==========
+function applyLoadedState() {
+  // Тема
+  body.setAttribute('data-theme', state.settings.theme || 'red');
+  document.querySelectorAll('.theme-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.t === state.settings.theme);
+  });
+
+  // Кастомный текст
+  var input = $('customText');
+  if (input) input.value = state.settings.text || '';
+  applyCustomText(state.settings.text || '');
+
+  // Эффекты
+  body.classList.toggle('glitch-on',  !!state.settings.glitch);
+  body.classList.toggle('rainbow-on', !!state.settings.rainbow);
+  body.classList.toggle('shake-on',   !!state.settings.shake);
+  if (bigWrapper) bigWrapper.classList.toggle('no-pulse', !state.settings.pulse);
+
+  var pc = $('particles');
+  if (pc) pc.style.display = state.settings.particles ? '' : 'none';
+  var cg = $('cursorGlow');
+  if (cg) cg.style.display = state.settings.cursor ? '' : 'none';
+
+  // Тумблеры
+  var swMap = {
+    pulse: 'swPulse', glitch: 'swGlitch', rainbow: 'swRainbow', shake: 'swShake',
+    particles: 'swParticles', cursor: 'swCursor', sound: 'swSound'
+  };
+  Object.keys(swMap).forEach(function(k) {
+    var sw = $(swMap[k]);
+    if (sw) sw.classList.toggle('on', !!state.settings[k]);
+  });
+
+  // Слайдеры
+  var ts = $('textSize');
+  if (ts) { ts.value = state.settings.textSize; changeTextSize(state.settings.textSize); }
+  var vol = $('volume');
+  if (vol) vol.value = state.settings.volume;
+
+  // Счётчик
+  $('clickCount').textContent = state.clicks;
+}
+
+// ========== INIT ==========
+function init() {
+  if (!bigText || !bigWrapper) return;
+
+  loadSettings();
+  applyLoadedState();
+
+  // Кастомный текст — ввод
+  var customInput = $('customText');
+  if (customInput) {
+    customInput.addEventListener('input', function() {
+      applyCustomText(this.value);
+      saveSettings();
+    });
+  }
+
+  setTimeout(function() { playBeep(400, 0.1, 'sine', 0.1); }, 100);
+  setTimeout(function() { playBeep(600, 0.1, 'sine', 0.1); }, 250);
+  setTimeout(function() { playBeep(900, 0.15, 'sine', 0.12); }, 400);
+  checkVisible();
+  setTimeout(function() { toast('👋 Добро пожаловать на официальный сайт'); }, 800);
+
+  var modal = $('settingsModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeSettings();
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var m = $('settingsModal');
+      if (m && m.classList.contains('show')) closeSettings();
+    }
+  });
+
+  bigWrapper.setAttribute('tabindex', '0');
+  bigWrapper.addEventListener('keydown', function(e) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      onTextClick();
+    }
+  });
+
+  bigWrapper.addEventListener('click', onTextClick);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
